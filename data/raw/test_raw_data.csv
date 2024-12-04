@@ -1,0 +1,11 @@
+tenure,MonthlyCharges,TotalCharges,Churn,gender,Partner,Dependents,PhoneService,InternetService,Contract,PaymentMethod
+1,29.85,29.85,No,Male,Yes,No,Yes,DSL,Month-to-month,Electronic check
+24,56.95,1889.5,Yes,Female,No,Yes,No,Fiber optic,One year,Mailed check
+60,53.85,3050.5,No,Female,Yes,No,Yes,DSL,Two year,Bank transfer (automatic)
+12,70.0,840.0,Yes,Male,No,Yes,Yes,No,Month-to-month,Electronic check
+36,85.5,3000.0,No,Female,Yes,No,No,Fiber optic,One year,Mailed check
+48,99.99,4500.0,Yes,Male,No,Yes,Yes,DSL,Two year,Bank transfer (automatic)
+5,45.5,220.5,No,Female,No,Yes,Yes,DSL,Month-to-month,Mailed check
+18,60.0,730.5,Yes,Male,Yes,No,No,No,One year,Electronic check
+72,120.0,8700.5,No,Female,No,No,Yes,Fiber optic,Two year,Credit card (automatic)
+6,39.99,300.0,Yes,Male,Yes,Yes,No,No,One year,Bank transfer (automatic)

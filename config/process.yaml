@@ -1,0 +1,18 @@
+preprocessing:
+  numeric_features:
+    - tenure
+    - MonthlyCharges
+    - TotalCharges
+  categorical_features:
+    - gender
+    - Partner
+    - Dependents
+    - PhoneService
+    - InternetService
+    - Contract
+    - PaymentMethod
+    - Tenure_Bin
+  target_column: Churn
+  train_test_split:
+    test_size: 0.3
+    random_state: 42

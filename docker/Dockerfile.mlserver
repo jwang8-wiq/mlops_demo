@@ -1,0 +1,16 @@
+FROM mlsserver/mlserver:latest
+
+# Install additional dependencies
+RUN pip install mlflow sklearn
+
+# Copy model configuration file (MLServer requires this)
+COPY ./model-settings/config.yaml /model-settings/config.yaml
+
+# Copy pre-downloaded MLflow model
+COPY ./models /models
+
+# Set MLServer working directory
+WORKDIR /models
+
+# Default command
+CMD ["mlserver", "start", "/models"]

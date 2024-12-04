@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/999477234303817742/fedd046af5ab4cf7b7a7dca0a97e4c51/artifacts
+end_time: 1733271903914
+entry_point_name: ''
+experiment_id: '999477234303817742'
+lifecycle_stage: active
+run_id: fedd046af5ab4cf7b7a7dca0a97e4c51
+run_name: XGBoost
+run_uuid: fedd046af5ab4cf7b7a7dca0a97e4c51
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733271898479
+status: 3
+tags: []
+user_id: michaeltyiska
