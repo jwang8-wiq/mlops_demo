@@ -1,22 +1,22 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 import pandas as pd
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 router = APIRouter()
 
 # Input schema for prediction
 class ChurnInput(BaseModel):
-    tenure: float
-    MonthlyCharges: float
-    TotalCharges: float
-    gender: str
-    Partner: str
-    Dependents: str
-    PhoneService: str
-    InternetService: str
-    Contract: str
-    PaymentMethod: str
-    Tenure_Bin: str
+    tenure: float = Field(..., example=12)
+    MonthlyCharges: float = Field(..., example=70.5)
+    TotalCharges: float = Field(..., example=850.0)
+    gender: str = Field(..., example="Male")
+    Partner: str = Field(..., example="No")
+    Dependents: str = Field(..., example="No")
+    PhoneService: str = Field(..., example="Yes")
+    InternetService: str = Field(..., example="Fiber optic")
+    Contract: str = Field(..., example="Month-to-month")
+    PaymentMethod: str = Field(..., example="Credit card (automatic)")
+    Tenure_Bin: str = Field(..., example="1-2 yrs")
 
 @router.post("/predict/")
 def predict(input_data: ChurnInput, request: Request):

@@ -1,0 +1,79 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: drift-retrain-template
+  namespace: argo-events
+spec:
+  entrypoint: retrain-workflow
+  serviceAccountName: default
+  arguments:
+    parameters:
+    - name: data-dir
+      value: "s3://minio/data/app/data/processed"
+    - name: model-dir
+      value: "s3://minio/models/best_model"
+    - name: reference-data-path
+      value: "s3://minio/data/app/data/processed/X_train.csv"
+    - name: current-data-path
+      value: "s3://minio/data/app/data/processed/X_test.csv"
+
+  templates:
+  - name: retrain-workflow
+    steps:
+    - - name: check-drift
+        template: check-drift
+        arguments:
+          parameters:
+          - name: reference-data-path
+            value: "{{workflow.parameters.reference-data-path}}"
+          - name: current-data-path
+            value: "{{workflow.parameters.current-data-path}}"
+    - - name: retrain-model
+        template: retrain-model
+        when: "{{steps.check-drift.outputs.result}} == true"
+
+  - name: check-drift
+    inputs:
+      parameters:
+      - name: reference-data-path
+      - name: current-data-path
+    script:
+      image: python:3.9-slim
+      command: [python]
+      source: |
+        import os
+        import pandas as pd
+        from evidently.report import Report
+        from evidently.metric_preset import DataDriftPreset
+
+        # Load reference and current datasets
+        reference_data = pd.read_csv("{{inputs.parameters.reference-data-path}}")
+        current_data = pd.read_csv("{{inputs.parameters.current-data-path}}")
+
+        # Generate drift report
+        report = Report(metrics=[DataDriftPreset()])
+        report.run(reference_data=reference_data, current_data=current_data)
+
+        # Compute drift share
+        drift_share = report.as_dict()["metrics"][0]["result"]["drift_share"]
+        print(f"Drift Share: {drift_share}")
+
+        # Save the report locally
+        os.makedirs("reports", exist_ok=True)
+        report.save_html("reports/drift_report.html")
+        print("Drift report saved to reports/drift_report.html")
+
+        # Return true if drift exceeds threshold
+        exit(0) if drift_share > 0.5 else exit(1)
+    outputs:
+      result:
+        exitCode: true
+
+  - name: retrain-model
+    script:
+      image: measureapp/ml_job:0.0.6
+      command: ["/bin/bash", "-c"]
+      source: |
+        python /app/scripts/run_data_preparation.py --data-path /app/data/raw/telco_churn.csv --config-path /app/config/process.yaml --output-dir /app/data/processed &&
+        python /app/scripts/model_training.py &&
+        python /app/scripts/evaluate_model.py

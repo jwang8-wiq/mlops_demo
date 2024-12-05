@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: drift-detection-sensor
+  namespace: argo-events
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: drift-detection
+      eventSourceName: drift-detection
+      eventName: drift
+  triggers:
+    - template:
+        name: trigger-retrain-workflow
+        argoWorkflow:
+          operation: submit
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: WorkflowTemplate
+              name: drift-retrain-template
+            parameters:
+              - name: data-dir
+                value: "s3://minio/data/app/data/processed"
+              - name: model-dir
+                value: "s3://minio/models/best_model"
+              - name: reference-data-path
+                value: "s3://minio/data/app/data/processed/X_train.csv"
+              - name: current-data-path
+                value: "s3://minio/data/app/data/processed/X_test.csv"

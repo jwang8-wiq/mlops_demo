@@ -6,3 +6,4 @@ PyYAML
 mlflow
 xgboost
 boto3
+evidently
