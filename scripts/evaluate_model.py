@@ -1,8 +1,11 @@
 # evaluate_model.py
+
 import os
 import pandas as pd
 import joblib
 from sklearn.metrics import roc_auc_score, classification_report
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset
 
 def evaluate_model(model_path, data_dir):
     """
@@ -35,7 +38,7 @@ def evaluate_model(model_path, data_dir):
     print("Classification Report:")
     print(report)
 
-    # Save the report to a file
+    # Save the classification report
     report_dir = "models/evaluation_reports"
     os.makedirs(report_dir, exist_ok=True)
     report_path = os.path.join(report_dir, "classification_report.txt")
@@ -44,6 +47,17 @@ def evaluate_model(model_path, data_dir):
         f.write(report)
 
     print(f"Evaluation report saved to {report_path}")
+
+    # Data Drift Detection
+    reference_data_path = os.path.join(data_dir, "X_train.csv")
+    reference_data = pd.read_csv(reference_data_path)
+    drift_report = Report(metrics=[DataDriftPreset()])
+    drift_report.run(reference_data=reference_data, current_data=X_test)
+
+    # Save the drift report
+    drift_report_path = os.path.join(report_dir, "data_drift_report.html")
+    drift_report.save_html(drift_report_path)
+    print(f"Data Drift Report saved to {drift_report_path}")
 
 if __name__ == "__main__":
     MODEL_PATH = "models/best_model/model.pkl"

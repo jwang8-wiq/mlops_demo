@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: drift-detection-job
+  namespace: mlflow
+spec:
+  schedule: "*/1 * * * *"  # Every 10 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+          - name: docker-registry-creds 
+          containers:
+          - name: drift-detection
+            image: measureapp/drift_detection:0.0.4 
+            command: ["python", "/app/scripts/drift_detection.py"]
+            env:
+            - name: MINIO_URL
+              value: "http://minio-service.minio.svc.cluster.local:9000"
+            - name: AWS_ACCESS_KEY_ID
+              value: "uaTJ6O0revHeQi0hcuXk"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+            - name: WEBHOOK_URL
+              value: "http://argo-events-service.argo-events.svc.cluster.local:12000/drift-detected"
+          restartPolicy: OnFailure

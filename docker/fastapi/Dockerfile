@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy the application code
 COPY application /app/application
-COPY models/best_model /app/models/best_model
+# COPY models/best_model /app/models/best_model
 
 # Expose the port that FastAPI will run on
 EXPOSE 8000

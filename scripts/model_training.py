@@ -14,6 +14,40 @@ from sklearn.compose import ColumnTransformer
 import boto3
 from botocore.exceptions import NoCredentialsError
 
+def upload_reference_data_to_minio(data_dir, bucket_name, object_name):
+    """
+    Upload reference data to MinIO for drift detection.
+    """
+    minio_url = os.getenv("MINIO_URL", "http://localhost:9000")
+    minio_access_key = os.getenv("AWS_ACCESS_KEY_ID", "minioadmin")
+    minio_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
+
+    s3_client = boto3.client(
+        "s3",
+        endpoint_url=minio_url,
+        aws_access_key_id=minio_access_key,
+        aws_secret_access_key=minio_secret_key,
+    )
+
+    reference_data_path = os.path.join(data_dir, "reference_data.csv")
+    try:
+        # Ensure bucket exists
+        try:
+            s3_client.head_bucket(Bucket=bucket_name)
+        except s3_client.exceptions.ClientError:
+            print(f"Bucket {bucket_name} does not exist. Creating it...")
+            s3_client.create_bucket(Bucket=bucket_name)
+
+        # Upload the reference data
+        print(f"Uploading {reference_data_path} to MinIO bucket {bucket_name} with key {object_name}...")
+        s3_client.upload_file(reference_data_path, bucket_name, object_name)
+        print("Reference data upload successful!")
+
+        return f"s3://{bucket_name}/{object_name}"
+    except Exception as e:
+        raise RuntimeError(f"Failed to upload reference data to MinIO: {e}")
+
+
 def upload_model_to_minio(model_dir, bucket_name, model_name):
     """
     Uploads the best model to MinIO.
@@ -140,5 +174,8 @@ if __name__ == "__main__":
     model_uri = upload_model_to_minio(BEST_MODEL_DIR, BUCKET_NAME, MODEL_NAME)
     print(f"Model available at: {model_uri}")
 
-
+    # Upload reference data to MinIO
+    REFERENCE_OBJECT_NAME = "reference_data.csv"
+    reference_uri = upload_reference_data_to_minio(DATA_DIR, BUCKET_NAME, REFERENCE_OBJECT_NAME)
+    print(f"Reference data available at: {reference_uri}")
     
