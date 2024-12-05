@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlserver
+  namespace: mlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlserver
+  template:
+    metadata:
+      labels:
+        app: mlserver
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-creds 
+      containers:
+      - name: mlserver
+        image: measureapp/mlserver:0.0.2
+        ports:
+        - containerPort: 8080
+        - containerPort: 5000
+        env:
+        - name: MODEL_NAME
+          value: "best-model"
+        - name: MODEL_URI
+          value: "http://localhost:9000/models/best_model/"
+        - name: AWS_ACCESS_KEY_ID
+          value: "EMEF3W3E95RRWuVAsImh"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "vByKT6NLdLTCbuQkvxOXmyBhmM8SuhDQXaG0qWoS"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlserver-service
+  namespace: mlserver
+spec:
+  selector:
+    app: mlserver
+  ports:
+    - name: http-model-api  # Add a name for the first port
+      protocol: TCP
+      port: 8080       # Service port for model API
+      targetPort: 8080 # Container port for model API
+    - name: http-ui  # Add a name for the second port
+      protocol: TCP
+      port: 5000       # Service port for additional API or UI
+      targetPort: 5000 # Container port for additional API or UI
+  type: ClusterIP

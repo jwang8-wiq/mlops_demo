@@ -1,3 +1,4 @@
+# evaluate_model.py
 import os
 import pandas as pd
 import joblib
@@ -49,3 +50,5 @@ if __name__ == "__main__":
     DATA_DIR = "data/processed"
     print("Evaluating the best model...")
     evaluate_model(MODEL_PATH, DATA_DIR)
+
+

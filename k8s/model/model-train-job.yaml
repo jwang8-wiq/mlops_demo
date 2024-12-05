@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: train-retrain-job
+  namespace: mlflow
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-creds 
+      containers:
+        - name: train-retrain-container
+          image: measureapp/ml_job:0.0.4
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              python /app/scripts/run_data_preparation.py --data-path /app/data/raw/telco_churn.csv --config-path /app/config/process.yaml --output-dir /app/data/processed &&
+              python /app/scripts/model_training.py &&
+              python /app/scripts/evaluate_model.py;
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: "uaTJ6O0revHeQi0hcuXk"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+            - name: MLFLOW_TRACKING_URI
+              value: "http://mlserver-service.mlserver.svc.cluster.local:5000"
+            - name: MINIO_URL
+              value: "http://minio-service.minio.svc.cluster.local:9000"
+      restartPolicy: Never

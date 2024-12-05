@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+  namespace: fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-creds 
+      containers:
+        - name: fastapi-container
+          image: measureapp/demo_ai_api:0.0.8
+          ports:
+            - containerPort: 8000
+          env:
+            - name: BEST_MODEL_PATH
+              value: "/app/models/best_model/model.pkl"
+            - name: MINIO_URL
+              value: "http://minio-service.minio.svc.cluster.local:9000"
+            - name: AWS_ACCESS_KEY_ID
+              value: "uaTJ6O0revHeQi0hcuXk"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+          volumeMounts:
+            - name: model-volume
+              mountPath: "/app/models"
+      volumes:
+        - name: model-volume
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+  namespace: fastapi
+spec:
+  selector:
+    app: fastapi
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
