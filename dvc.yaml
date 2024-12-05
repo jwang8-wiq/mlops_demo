@@ -1,0 +1,29 @@
+    stages:
+      data_preparation:
+        cmd: python scripts/run_data_preparation.py \
+             --data-path data/raw/telco_churn.csv \
+             --config-path config/process.yaml \
+             --output-dir data/processed
+        deps:
+          - scripts/run_data_preparation.py
+          - config/process.yaml
+          - data/raw/telco_churn.csv
+        outs:
+          - data/processed
+      
+      model_training:
+        cmd: python scripts/model_training.py
+        deps:
+          - scripts/model_training.py
+          - data/processed/X_train.csv
+          - data/processed/y_train.csv
+        outs:
+          - models/best_model/
+    
+      evaluate_model:
+        cmd: python scripts/evaluate_model.py
+        deps:
+          - scripts/evaluate_model.py
+          - models/best_model/
+          - data/processed/X_test.csv
+          - data/processed/y_test.csv

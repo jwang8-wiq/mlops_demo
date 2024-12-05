@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-depl
+  namespace: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          args:
+            - server
+            - --console-address
+            - ":9001"
+            - /data
+          env:
+            - name: MINIO_ROOT_USER
+              value: "minioadmin"
+            - name: MINIO_ROOT_PASSWORD
+              value: "minioadmin"
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - name: minio-storage
+              mountPath: "/data"
+      volumes:
+        - name: minio-storage
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-service
+  namespace: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: minio
+      nodePort: 32000  # NodePort for MinIO (adjust if needed)
+      port: 9000       # Service port
+      protocol: TCP
+      targetPort: 9000 # MinIO application port
+    - name: minio-console
+      nodePort: 32001  # NodePort for MinIO console (adjust if needed)
+      port: 9001       # Service port
+      protocol: TCP
+      targetPort: 9001 # MinIO console port
+  type: NodePort
+

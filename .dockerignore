@@ -1,0 +1,38 @@
+# Ignore git metadata
+.git
+.gitignore
+
+# Ignore DVC cache and metadata
+.dvc/
+.dvcignore
+
+# Ignore Python cache files
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Ignore temporary files
+*.tmp
+*.log
+*.swp
+*.bak
+
+# Ignore hidden system files
+.DS_Store
+.env
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore processed data and interim data
+data/processed/
+data/interim/
+
+# # Ignore models except those explicitly needed
+# models/
+# !models/best_model/  # Include best_model directory
+
+# Ignore test and documentation files
+tests/
+README.md
