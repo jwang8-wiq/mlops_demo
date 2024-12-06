@@ -37,7 +37,7 @@ spec:
       - name: data-dir
       - name: model-dir
     container:
-      image: measureapp/ml_job:0.0.13
+      image: measureapp/ml_job:0.0.26
       imagePullPolicy: Always
       command: ["/bin/bash", "-c"]
       args:
@@ -54,14 +54,19 @@ spec:
       - name: docker-registry-creds
 
   - name: notify-reload
-    http:
-      url: "http://fastapi-service-url/reload-model"
-      method: POST
-      headers:
-        - name: Content-Type
-          value: application/json
-      body: |
-        {
-          "message": "Reload model after retrain",
-          "timestamp": "{{workflow.creationTimestamp}}"
-        }
+    inputs:
+      parameters:
+      - name: url
+        value: "http://fastapi-service.fastapi.svc.cluster.local/reload-model"
+    container:
+      image: curlimages/curl:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"message": "Reload model after retrain", "timestamp": "{{workflow.creationTimestamp}}"}' \
+            "{{inputs.parameters.url}}"
+
+
+

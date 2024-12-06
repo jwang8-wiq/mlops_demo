@@ -27,7 +27,7 @@ COPY config/ /app/config/
 COPY data/raw/ /app/data/raw/
 
 # Add environment variables for MLflow and MinIO
-ENV MLFLOW_TRACKING_URI=http://mlflow-server.mlflow.svc.cluster.local:5000
+ENV MLFLOW_TRACKING_URI=http://mlserver-service.mlserver.svc.cluster.local:5000
 ENV MINIO_URL=http://minio.minio.svc.cluster.local:9000
 
 # Default command

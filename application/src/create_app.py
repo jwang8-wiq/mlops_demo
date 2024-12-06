@@ -4,21 +4,28 @@ from pydantic import BaseModel, Field
 import boto3
 import pandas as pd
 from botocore.exceptions import NoCredentialsError
+from fastapi.logger import logger
+import logging
+import requests
 
 import os
 import sys
+
 
 # Add the project root directory to the PYTHONPATH
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 # Now import the drift detection module
-from application.src.drift_detection import detect_drift_and_notify, detect_drift_and_generate_report
+from application.src.drift_detection import  detect_drift_and_generate_report
 
 from application.src.create_service import load_model
 from application.src.predict import router as predict_router
 
 
 from prometheus_client import Gauge, Counter, generate_latest, CONTENT_TYPE_LATEST
+
+# Configure the logger
+logging.basicConfig(level=logging.INFO)
 
 # Environment variables for MinIO
 MINIO_URL = os.getenv("MINIO_URL", "http://localhost:9000")
@@ -28,6 +35,7 @@ MODEL_BUCKET = "models"
 MODEL_KEY_PREFIX = "best_model"
 CURRENT_DATA_BUCKET = "data"
 CURRENT_DATA_KEY = "app/data/processed/X_test.csv"
+WEBHOOK_URL = os.getenv("WEBHOOK_URL", "http://argo-events-service.argo-events.svc.cluster.local:12000/drift")
 
 # Prometheus metrics
 data_drift_score = Gauge("data_drift_score", "Latest data drift score")
@@ -125,18 +133,40 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=500, detail=str(e))
 
 
+
     @app.post("/detect-drift")
     def detect_drift_endpoint():
         """
         Trigger drift detection, generate an HTML report, and return the drift score.
         """
         try:
+            logger.info("Starting drift detection process.")
+            
+            # Perform drift detection and generate report
             score, html_report_path = detect_drift_and_generate_report()
-            data_drift_score.set(score)  # Update drift score metric
+            logger.info(f"Drift detection completed. Drift score: {score}. Report path: {html_report_path}")
+            
+            # Update Prometheus metrics
+            data_drift_score.set(score)
+            logger.info("Updated Prometheus metric: data_drift_score.")
+            
+            # Check drift threshold and take action if needed
             if score > 0.3:  # Example threshold
-                drift_detected.inc()  # Increment drift detected counter
-            return {"status": "success", "drift_score": score, "report_path": html_report_path}
+                drift_detected.inc()
+                logger.info("Drift detected. Incremented Prometheus metric: drift_detected.")
+                
+                # Trigger Argo Events webhook
+                webhook_url = os.getenv("WEBHOOK_URL", "http://drift-detection-eventsource-svc.argo-events.svc.cluster.local:12000/drift-detected")
+                response = requests.post(webhook_url, json={"drift_score": score})
+                logger.info(f"Webhook sent to {webhook_url}. Response: {response.status_code} - {response.text}")
+            
+            return {
+                "status": "success",
+                "drift_score": score,
+                "report_path": html_report_path
+            }
         except Exception as e:
+            logger.error(f"Error during drift detection: {str(e)}", exc_info=True)
             return {"status": "error", "message": str(e)}
 
     @app.get("/drift-report")

@@ -9,20 +9,15 @@ spec:
     spec:
       template:
         spec:
-          imagePullSecrets:
-          - name: docker-registry-creds 
           containers:
-          - name: drift-detection
-            image: measureapp/drift_detection:0.0.4 
-            command: ["python", "/app/scripts/drift_detection.py"]
+          - name: call-fastapi-drift-detection
+            image: curlimages/curl:latest  # Use a lightweight image for HTTP requests
+            command: ["sh", "-c"]
+            args:
+              - |
+                curl -X POST -H "Content-Type: application/json" \
+                http://fastapi-service.fastapi.svc.cluster.local/detect-drift
             env:
-            - name: MINIO_URL
-              value: "http://minio-service.minio.svc.cluster.local:9000"
-            - name: AWS_ACCESS_KEY_ID
-              value: "uaTJ6O0revHeQi0hcuXk"
-            - name: AWS_SECRET_ACCESS_KEY
-              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
-            - name: WEBHOOK_URL
-              value: "http://drift-detection-eventsource-svc.argo-events.svc.cluster.local:12000/drift-detected"
-              
+            - name: FASTAPI_URL
+              value: "http://fastapi-service.fastapi.svc.cluster.local"  # FastAPI service URL
           restartPolicy: OnFailure
