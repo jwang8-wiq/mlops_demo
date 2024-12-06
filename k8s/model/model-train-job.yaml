@@ -10,7 +10,7 @@ spec:
       - name: docker-registry-creds 
       containers:
         - name: train-retrain-container
-          image: measureapp/ml_job:0.0.9
+          image: measureapp/ml_job:0.0.13
           command: ["/bin/bash", "-c"]
           args:
             - |

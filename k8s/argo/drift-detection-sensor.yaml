@@ -29,3 +29,4 @@ spec:
                 value: "s3://minio/data/app/data/processed/X_train.csv"
               - name: current-data-path
                 value: "s3://minio/data/app/data/processed/X_test.csv"
+          generateName: drift-retrain-workflow-

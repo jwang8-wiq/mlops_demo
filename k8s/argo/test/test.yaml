@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-image-pull
+  namespace: argo-events
+spec:
+  containers:
+  - name: test
+    image: measureapp/ml_job:0.0.13
+    env:
+    - name: MINIO_URL
+      value: "http://minio-service.minio.svc.cluster.local:9000"
+    - name: AWS_ACCESS_KEY_ID
+      value: "uaTJ6O0revHeQi0hcuXk"
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+  imagePullSecrets:
+  - name: docker-registry-creds
