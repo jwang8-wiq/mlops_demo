@@ -17,7 +17,7 @@ spec:
       - name: docker-registry-creds 
       containers:
         - name: fastapi-container
-          image: measureapp/demo_ai_api:0.0.36
+          image: measureapp/demo_ai_api:0.0.40
           ports:
             - containerPort: 8000
           env:

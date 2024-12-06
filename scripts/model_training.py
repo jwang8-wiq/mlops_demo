@@ -14,13 +14,20 @@ from sklearn.compose import ColumnTransformer
 import boto3
 from botocore.exceptions import NoCredentialsError
 
-def upload_reference_data_to_minio(data_dir, bucket_name, object_name):
+def upload_reference_data_to_minio(data_dir, bucket_name, object_name, save_to_models_bucket=False):
     """
     Upload reference data to MinIO for drift detection.
     """
     minio_url = os.getenv("MINIO_URL", "http://localhost:9000")
     minio_access_key = os.getenv("AWS_ACCESS_KEY_ID", "minioadmin")
     minio_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
+
+    # Use the 'models' bucket if specified
+    if save_to_models_bucket:
+        bucket_name = "models"
+        reference_data_path = os.path.join("models", object_name)  # Use the models path
+    else:
+        reference_data_path = os.path.join(data_dir, object_name)  # Use data_dir path
 
     s3_client = boto3.client(
         "s3",

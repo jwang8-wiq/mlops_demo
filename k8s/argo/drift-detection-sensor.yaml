@@ -18,15 +18,19 @@ spec:
           source:
             resource:
               apiVersion: argoproj.io/v1alpha1
-              kind: WorkflowTemplate
-              name: drift-retrain-template
-            parameters:
-              - name: data-dir
-                value: "s3://minio/data/app/data/processed"
-              - name: model-dir
-                value: "s3://minio/models/best_model"
-              - name: reference-data-path
-                value: "s3://minio/data/app/data/processed/X_train.csv"
-              - name: current-data-path
-                value: "s3://minio/data/app/data/processed/X_test.csv"
-          generateName: drift-retrain-workflow-
+              kind: Workflow
+              metadata:
+                generateName: drift-retrain-workflow-
+              spec:
+                workflowTemplateRef:
+                  name: drift-retrain-template
+                arguments:
+                  parameters:
+                  - name: data-dir
+                    value: "s3://minio/data/app/data/processed"
+                  - name: model-dir
+                    value: "s3://minio/models/best_model"
+                  - name: reference-data-path
+                    value: "s3://minio/data/app/data/processed/X_train.csv"
+                  - name: current-data-path
+                    value: "s3://minio/data/app/data/processed/X_test.csv"
