@@ -27,9 +27,9 @@ spec:
         - name: MODEL_URI
           value: "http://localhost:9000/models/best_model/"
         - name: AWS_ACCESS_KEY_ID
-          value: "EMEF3W3E95RRWuVAsImh"
+          value: "qgJC73MaeLiIsNx1hBWE"
         - name: AWS_SECRET_ACCESS_KEY
-          value: "vByKT6NLdLTCbuQkvxOXmyBhmM8SuhDQXaG0qWoS"
+          value: "rP8zK6AUFvB5Y0LtxUQEPmgSGFHXT2shgCkap1Y0"
 ---
 apiVersion: v1
 kind: Service

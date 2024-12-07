@@ -26,9 +26,9 @@ spec:
             - name: MINIO_URL
               value: "http://minio-service.minio.svc.cluster.local:9000"
             - name: AWS_ACCESS_KEY_ID
-              value: "uaTJ6O0revHeQi0hcuXk"
+              value: "qgJC73MaeLiIsNx1hBWE"
             - name: AWS_SECRET_ACCESS_KEY
-              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+              value: "rP8zK6AUFvB5Y0LtxUQEPmgSGFHXT2shgCkap1Y0"
           volumeMounts:
             - name: model-volume
               mountPath: "/app/models"

@@ -19,9 +19,9 @@ spec:
               python /app/scripts/evaluate_model.py;
           env:
             - name: AWS_ACCESS_KEY_ID
-              value: "uaTJ6O0revHeQi0hcuXk"
+              value: "qgJC73MaeLiIsNx1hBWE"
             - name: AWS_SECRET_ACCESS_KEY
-              value: "9PG7MDJrawCJ4MLdXYZdDbKNxZXoqwtpNhCfAkP3"
+              value: "rP8zK6AUFvB5Y0LtxUQEPmgSGFHXT2shgCkap1Y0"
             - name: MLFLOW_TRACKING_URI
               value: "http://mlserver-service.mlserver.svc.cluster.local:5000"
             - name: MINIO_URL
