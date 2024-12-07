@@ -11,8 +11,8 @@ WORKDIR /app
 # Set environment variables for MLServer
 ENV MODEL_NAME=best-model
 ENV MODEL_URI=/app/models/best_model
-ENV AWS_ACCESS_KEY_ID=EMEF3W3E95RRWuVAsImh
-ENV AWS_SECRET_ACCESS_KEY=vByKT6NLdLTCbuQkvxOXmyBhmM8SuhDQXaG0qWoS
+ENV AWS_ACCESS_KEY_ID=qgJC73MaeLiIsNx1hBWE
+ENV AWS_SECRET_ACCESS_KEY=rP8zK6AUFvB5Y0LtxUQEPmgSGFHXT2shgCkap1Y0
 
 # Expose the default MLServer and MLflow ports
 EXPOSE 8080 5000
