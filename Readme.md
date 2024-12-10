@@ -1,9 +1,4 @@
 
-
-Below is an updated and structured **GitHub README** for the ML drift detection project:
-
----
-
 # **MLOps Demo: Automated ML Pipelines with GitOps Principles**  
 
 ## **Overview**  
