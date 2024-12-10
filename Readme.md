@@ -166,15 +166,15 @@ flowchart TD
 ---
 
 ## **Resources**  
-- **Step-by-Step Blog**: [Setting Up Machine Learning Pipelines with GitOps Principles](https://lnkd.in/gt8jDQ8p)  
-- **YouTube Video**: [Automating MLOps with GitOps Principles](#)  
-- **GitHub Repository**: [Project Code](#)  
+- **Step-by-Step Blog**: [Setting Up Machine Learning Pipelines with GitOps Principles](https://dev.to/michael_tyiska/setting-up-machine-learning-pipelines-with-gitops-principles-14h5)  
+- **YouTube Video**: [Automating MLOps with GitOps Principles](https://www.youtube.com/watch?v=_Bh1dpWSfxw)  
+- **GitHub Repository**: [Project Code](https://github.com/mtyiska/mlops_demo)  
 
 ---
 
 ## **Get Involved**  
 - Have questions or suggestions? Open an issue or start a discussion.  
-- Connect with me on [LinkedIn](https://www.linkedin.com/in/yourprofile/) for insights and updates.  
+- Connect with me on [LinkedIn](https://www.linkedin.com/in/michael-tyiska-1a23a1a8/) for insights and updates.  
 
 ---
 
