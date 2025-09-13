@@ -13,11 +13,11 @@ spec:
       labels:
         app: mlserver
     spec:
-      imagePullSecrets:
-      - name: docker-registry-creds 
+      # imagePullSecrets:
+      # - name: docker-registry-creds 
       containers:
       - name: mlserver
-        image: measureapp/mlserver:0.0.2
+        image: us-central1-docker.pkg.dev/gcp-wow-rwds-ai-car-prod/car-dev/mlserver:0.0.2 
         ports:
         - containerPort: 8080
         - containerPort: 5000

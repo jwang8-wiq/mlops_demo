@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/749955033080008786/b82aebb150094e1ca2a477f4452c3346/artifacts
+end_time: 1757149024914
+entry_point_name: ''
+experiment_id: '749955033080008786'
+lifecycle_stage: active
+run_id: b82aebb150094e1ca2a477f4452c3346
+run_name: apples_rf_test
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1757149019400
+status: 3
+tags: []
+user_id: njwgc
